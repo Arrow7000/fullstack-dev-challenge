@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { calculateSavings } = require("../helpers/savings");
+const { getConversionRate } = require("../helpers/currency-convert");
+
+const defaultCurrency = "GBP";
 
 router.post("/savings", (req, res) => {
   const {
@@ -20,11 +23,32 @@ router.post("/savings", (req, res) => {
     monthsNum
   ];
 
-  if (paramsArray.includes(undefined)) {
+  if (paramsArray.some(item => item === undefined || item === null)) {
     res.send({ error: "all parameters should be present" });
   } else {
     const savings = calculateSavings(...paramsArray);
-    res.send({ savings });
+
+    if (currency && currency !== "" && currency !== defaultCurrency) {
+      (async () => {
+        try {
+          const rate = await getConversionRate(currency);
+          const converted = savings.map(
+            monthFigure => +(monthFigure * rate).toFixed(2)
+          );
+          res.send({
+            savings: converted,
+            currency: currency.toUpperCase()
+          });
+        } catch (error) {
+          res.send({ error });
+        }
+      })();
+    } else {
+      res.send({
+        savings,
+        currency: defaultCurrency
+      });
+    }
   }
 });
 

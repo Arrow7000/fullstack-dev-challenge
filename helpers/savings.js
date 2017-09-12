@@ -5,21 +5,27 @@ const { pow } = Math;
  * 
  * @param {number} principal 
  * @param {number} interestRate 
+ * @param {number} interestAnnFreq 
  * @param {number} monthlyDeposit 
  * @param {number} monthsNum 
- * @param {number} interestAnnFreq 
  */
 
 function calculateSavings(
   principal,
   interestRate,
+  interestAnnFreq,
   monthlyDeposit,
-  monthsNum,
-  interestAnnFreq
+  monthsNum
 ) {
   const array = new Array(monthsNum).fill(null);
   const months = array.map((_, i) => {
-    return futureValue(principal, interestRate, interestAnnFreq, i + 1);
+    return futureValue(
+      principal,
+      interestRate,
+      interestAnnFreq,
+      monthlyDeposit,
+      i + 1
+    );
   });
 
   return months;
@@ -29,29 +35,33 @@ function calculateSavings(
  * 
  * @param {number} principal 
  * @param {number} interestRate 
- * @param {number} monthlyDeposit 
  * @param {number} interestAnnFreq 
+ * @param {number} monthlyDeposit 
  * @param {number} monthsNum 
  */
 
 function futureValue(
   principal,
   interestRate,
-  monthlyDeposit,
   interestAnnFreq,
+  monthlyDeposit,
   monthsNum
 ) {
   const r = interestRate;
   const n = interestAnnFreq;
-  const t = monthsNum / monthsPerAnn;
   const pmt = monthlyDeposit;
 
-  const interestOnPrincipal = principal * pow(1 + r / n, n * t);
+  const toReduce = new Array(monthsNum).fill(null);
 
-  const seriesFutureValue = pmt * (pow(1 + r / n, n * t) - 1) / (r / n);
+  const total = toReduce.reduce((total, _, i) => {
+    const isInterestMonth = (i + 1) % (monthsPerAnn / n) === 0; // checks whether this month is one where interest is calculated
 
-  console.log({ seriesFutureValue, interestOnPrincipal });
-  return +(seriesFutureValue + interestOnPrincipal).toFixed(2);
+    const interest = total * (r / n);
+    const newTotal = total + (isInterestMonth ? interest : 0) + pmt;
+    return +newTotal.toFixed(2); // round to the nearest penny, as a bank would do
+  }, principal);
+
+  return total;
 }
 
 module.exports = { futureValue, calculateSavings };

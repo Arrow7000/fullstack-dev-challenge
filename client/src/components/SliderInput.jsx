@@ -14,7 +14,7 @@ export default class SliderInput extends Component {
 
 	handleChange(e) {
 		const value = e.target.value
-		this.setState({value})
+		this.setState({ value })
 	}
 
 	render() {
@@ -28,7 +28,7 @@ export default class SliderInput extends Component {
 					min={0}
 					max={10}
 					step={0.25}
-					onChange={this.handleChange.bind(this)}/>
+					onChange={this.handleChange.bind(this)} />
 			</div>
 		)
 	}

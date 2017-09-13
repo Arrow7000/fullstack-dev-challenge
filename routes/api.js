@@ -12,7 +12,8 @@ router.get("/savings", (req, res) => {
     interestAnnFreq,
     monthlyDeposit,
     monthsNum,
-    currency
+    currency,
+    reqNonce
   } = req.query;
 
   const paramsArray = [
@@ -37,7 +38,8 @@ router.get("/savings", (req, res) => {
           );
           res.send({
             savings: converted,
-            currency: currency.toUpperCase()
+            currency: currency.toUpperCase(),
+            reqNonce
           });
         } catch (error) {
           res.send({ error });
@@ -46,7 +48,8 @@ router.get("/savings", (req, res) => {
     } else {
       res.send({
         savings,
-        currency: defaultCurrency
+        currency: defaultCurrency,
+        reqNonce
       });
     }
   }

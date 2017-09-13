@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "query-string": "^5.0.0",
+    "randomstring": "^1.1.5",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.6",

@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import axios from "axios";
 import queryString from "query-string";
 import { serverRoot, monthsNum } from "./config";
+import { generate as randNonce } from "randomstring";
 
 const getNullsArray = () => new Array(monthsNum).fill(0);
 
@@ -13,7 +14,8 @@ const initialState = {
   interestRatePct: 4, // percentage! convert to fraction before sending to server
   interestAnnFreq: 1,
   currency: "GBP",
-  data: getNullsArray() // will be returned from server API
+  data: getNullsArray(), // will be returned from server API
+  latestNonce: ""
 };
 
 // Action type enums
@@ -28,14 +30,25 @@ const CHANGE_CURRENCY = "CHANGE_CURRENCY";
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case REQUEST_CALC:
-      return { ...state, fetching: true };
-
-    case GET_CALC: {
       return {
         ...state,
-        fetching: false,
-        data: action.data
+        fetching: true,
+        latestNonce: action.nonce
       };
+
+    case GET_CALC: {
+      const { nonce, data } = action;
+      // checks that request nonce is latest nonce, so it doesn't use response from old request
+      if (nonce === state.latestNonce) {
+        return {
+          ...state,
+          fetching: false,
+          data
+        };
+      } else {
+        // ignore old response
+        return state;
+      }
     }
 
     case CHANGE_PRINCIPAL: {
@@ -92,14 +105,18 @@ const store = createStore(
 
 export default store;
 
-function requestCalculation() {
-  return { type: REQUEST_CALC };
+function requestCalculation(nonce) {
+  return {
+    type: REQUEST_CALC,
+    nonce
+  };
 }
 
-function getCalculation(calcResult) {
+function getCalculation(calcResult, nonce) {
   return {
     type: GET_CALC,
-    data: calcResult
+    data: calcResult,
+    nonce
   };
 }
 
@@ -111,7 +128,8 @@ export function fetchCalculation(
   currency
 ) {
   return dispatch => {
-    dispatch(requestCalculation());
+    const nonce = randNonce();
+    dispatch(requestCalculation(nonce));
     const body = {
       principal,
       monthlyDeposit,
@@ -127,7 +145,7 @@ export function fetchCalculation(
       .then(response => {
         const { error, savings } = response.data;
         if (!error && savings) {
-          dispatch(getCalculation(savings));
+          dispatch(getCalculation(savings, nonce));
         }
       })
       .catch(error => {

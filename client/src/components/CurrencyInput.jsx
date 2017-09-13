@@ -12,7 +12,6 @@ export default class CurrencyInput extends Component {
   handleChange(e) {
     const value = e.target.value;
     const { onChange } = this.props;
-    console.log(value);
     onChange(+value);
   }
 

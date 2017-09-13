@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import CurrencyInput from "./components/CurrencyInput";
 import SliderInput from "./components/SliderInput";
+import Selector from "./components/Selector";
 import DisplayGraph from "./components/DisplayGraph";
+import { currencies, frequencies } from "./config.js";
 import PropTypes from "prop-types";
 import "./App.css";
 
@@ -19,31 +21,31 @@ class App extends Component {
   changePrincipal(principal) {
     const { changePrincipal, onChange } = this.props;
     changePrincipal(principal);
-    onChange();
+    setTimeout(onChange(), 0);
   }
 
   changeDeposit(deposit) {
     const { changeDeposit, onChange } = this.props;
     changeDeposit(deposit);
-    onChange();
+    setTimeout(onChange(), 0);
   }
 
   changeInterestRate(interestRatePct) {
     const { changeInterestRate, onChange } = this.props;
     changeInterestRate(interestRatePct);
-    onChange();
+    setTimeout(onChange(), 0);
   }
 
   changeInterestFreq(interestAnnFreq) {
     const { changeInterestFreq, onChange } = this.props;
     changeInterestFreq(interestAnnFreq);
-    onChange();
+    setTimeout(onChange(), 0);
   }
 
   changeCurrency(currency) {
     const { changeCurrency, onChange } = this.props;
     changeCurrency(currency);
-    onChange();
+    setTimeout(onChange(), 0);
   }
 
   render() {
@@ -52,16 +54,13 @@ class App extends Component {
       principal,
       monthlyDeposit,
       interestRatePct,
+      currency,
+      interestAnnFreq,
       data
-      // Functions
-      // onChange
-      // changePrincipal,
-      // changeDeposit,
-      // changeInterestRate,
-      // changeInterestFreq,
-      // changeCurrency
     } = this.props;
-    console.log(this.props, data);
+
+    const currs = currencies.map(curr => ({ name: curr, value: curr }));
+
     return (
       <div className="App">
         <div className="header-banner">
@@ -82,6 +81,20 @@ class App extends Component {
             onChange={this.changeDeposit}
           />
 
+          <p className="input-label">Select a currency</p>
+          <Selector
+            options={currs}
+            selected={currency}
+            onChange={this.changeCurrency}
+          />
+
+          <p className="input-label">Frequency of interest payments</p>
+          <Selector
+            options={frequencies}
+            selected={interestAnnFreq}
+            onChange={this.changeInterestFreq}
+          />
+
           <p className="input-label">
             How much interest will you earn per year?
           </p>
@@ -91,28 +104,6 @@ class App extends Component {
           />
         </div>
         <div className="financial-display">
-          {/*We have included some sample data here, you will need to replace this
-					with your own. Feel free to change the data structure if you wish.*/}
-          {/* <DisplayGraph
-            data={[
-              {
-                month: 1,
-                amount: 500
-              },
-              {
-                month: 2,
-                amount: 700
-              },
-              {
-                month: 3,
-                amount: 1000
-              },
-              {
-                month: 4,
-                amount: 1500
-              }
-            ]}
-          /> */}
           <DisplayGraph data={data} />
         </div>
       </div>
@@ -125,6 +116,8 @@ App.propTypes = {
   monthlyDeposit: PropTypes.number,
   interestRatePct: PropTypes.number,
   data: PropTypes.arrayOf(PropTypes.number),
+  currency: PropTypes.string,
+  interestAnnFreq: PropTypes.number,
 
   changePrincipal: PropTypes.func,
   changeDeposit: PropTypes.func,

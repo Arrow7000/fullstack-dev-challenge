@@ -3,24 +3,10 @@ import PropTypes from "prop-types";
 import "./SliderInput.css";
 
 export default class SliderInput extends Component {
-  constructor(props) {
-    super(props);
-
-    // this.state = {
-    // 	value: props.defaultValue
-    // }
-  }
-
-  // handleChange(e) {
-  // 	const value = e.target.value
-  // 	this.setState({ value })
-  // }
-
   handleChange(e) {
     const value = e.target.value;
-    //   this.setState({ value });
     const { onChange } = this.props;
-    onChange(value);
+    onChange(+value);
   }
 
   render() {

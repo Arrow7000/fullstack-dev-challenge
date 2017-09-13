@@ -5,7 +5,7 @@ const { getConversionRate } = require("../helpers/currency-convert");
 
 const defaultCurrency = "GBP";
 
-router.post("/savings", (req, res) => {
+router.get("/savings", (req, res) => {
   const {
     principal,
     interestRate,
@@ -13,14 +13,14 @@ router.post("/savings", (req, res) => {
     monthlyDeposit,
     monthsNum,
     currency
-  } = req.body;
+  } = req.query;
 
   const paramsArray = [
-    principal,
-    interestRate,
-    interestAnnFreq,
-    monthlyDeposit,
-    monthsNum
+    +principal,
+    +interestRate,
+    +interestAnnFreq,
+    +monthlyDeposit,
+    +monthsNum
   ];
 
   if (paramsArray.some(item => item === undefined || item === null)) {

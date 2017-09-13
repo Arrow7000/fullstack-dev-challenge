@@ -4,8 +4,13 @@ import PropTypes from "prop-types";
 class Selector extends Component {
   handleChange(e) {
     const value = e.target.value;
-    const { onChange } = this.props;
-    onChange(value);
+    const { onChange, selected } = this.props;
+    const isNumeric = typeof selected === "number";
+    if (isNumeric) {
+      onChange(+value);
+    } else {
+      onChange(value);
+    }
   }
 
   render() {

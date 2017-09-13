@@ -16,41 +16,64 @@ class App extends Component {
     this.changeInterestRate = this.changeInterestRate.bind(this);
     this.changeInterestFreq = this.changeInterestFreq.bind(this);
     this.changeCurrency = this.changeCurrency.bind(this);
+
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(changedPropObj) {
+    // including changed prop means we don't have to wait till after reducer fires to send server request
+    const mergedObj = { ...this.props, ...changedPropObj };
+    const {
+      principal,
+      monthlyDeposit,
+      interestRatePct,
+      interestAnnFreq,
+      currency,
+
+      fetchCalculation
+    } = mergedObj;
+
+    fetchCalculation(
+      principal,
+      monthlyDeposit,
+      interestRatePct,
+      interestAnnFreq,
+      currency
+    );
   }
 
   changePrincipal(principal) {
-    const { changePrincipal, onChange } = this.props;
+    const { changePrincipal } = this.props;
     changePrincipal(principal);
-    setTimeout(onChange(), 0);
+    this.onChange({ principal });
   }
 
-  changeDeposit(deposit) {
-    const { changeDeposit, onChange } = this.props;
-    changeDeposit(deposit);
-    setTimeout(onChange(), 0);
+  changeDeposit(monthlyDeposit) {
+    const { changeDeposit } = this.props;
+    changeDeposit(monthlyDeposit);
+    this.onChange({ monthlyDeposit });
   }
 
   changeInterestRate(interestRatePct) {
-    const { changeInterestRate, onChange } = this.props;
+    const { changeInterestRate } = this.props;
     changeInterestRate(interestRatePct);
-    setTimeout(onChange(), 0);
+    this.onChange({ interestRatePct });
   }
 
   changeInterestFreq(interestAnnFreq) {
-    const { changeInterestFreq, onChange } = this.props;
+    const { changeInterestFreq } = this.props;
     changeInterestFreq(interestAnnFreq);
-    setTimeout(onChange(), 0);
+    this.onChange({ interestAnnFreq });
   }
 
   changeCurrency(currency) {
-    const { changeCurrency, onChange } = this.props;
+    const { changeCurrency } = this.props;
     changeCurrency(currency);
-    setTimeout(onChange(), 0);
+    this.onChange({ currency });
   }
 
   render() {
     const {
-      // Values
       principal,
       monthlyDeposit,
       interestRatePct,
@@ -124,7 +147,8 @@ App.propTypes = {
   changeInterestRate: PropTypes.func,
   changeInterestFreq: PropTypes.func,
   changeCurrency: PropTypes.func,
-  onChange: PropTypes.func
+
+  fetchCalculation: PropTypes.func
 };
 
 export default App;

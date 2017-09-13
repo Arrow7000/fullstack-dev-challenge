@@ -6,15 +6,62 @@ import PropTypes from "prop-types";
 import "./App.css";
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.changePrincipal = this.changePrincipal.bind(this);
+    this.changeDeposit = this.changeDeposit.bind(this);
+    this.changeInterestRate = this.changeInterestRate.bind(this);
+    this.changeInterestFreq = this.changeInterestFreq.bind(this);
+    this.changeCurrency = this.changeCurrency.bind(this);
+  }
+
+  changePrincipal(principal) {
+    const { changePrincipal, onChange } = this.props;
+    changePrincipal(principal);
+    onChange();
+  }
+
+  changeDeposit(deposit) {
+    const { changeDeposit, onChange } = this.props;
+    changeDeposit(deposit);
+    onChange();
+  }
+
+  changeInterestRate(interestRatePct) {
+    const { changeInterestRate, onChange } = this.props;
+    changeInterestRate(interestRatePct);
+    onChange();
+  }
+
+  changeInterestFreq(interestAnnFreq) {
+    const { changeInterestFreq, onChange } = this.props;
+    changeInterestFreq(interestAnnFreq);
+    onChange();
+  }
+
+  changeCurrency(currency) {
+    const { changeCurrency, onChange } = this.props;
+    changeCurrency(currency);
+    onChange();
+  }
+
   render() {
     const {
+      // Values
       principal,
       monthlyDeposit,
       interestRatePct,
-      data,
-      onChange
+      data
+      // Functions
+      // onChange
+      // changePrincipal,
+      // changeDeposit,
+      // changeInterestRate,
+      // changeInterestFreq,
+      // changeCurrency
     } = this.props;
-
+    console.log(this.props, data);
     return (
       <div className="App">
         <div className="header-banner">
@@ -25,23 +72,22 @@ class App extends Component {
           <CurrencyInput
             defaultValue={0}
             value={principal}
-            onChange={onChange}
+            onChange={this.changePrincipal}
           />
 
           <p className="input-label">How much will you save each month?</p>
           <CurrencyInput
             defaultValue={0}
             value={monthlyDeposit}
-            onChange={onChange}
+            onChange={this.changeDeposit}
           />
 
           <p className="input-label">
             How much interest will you earn per year?
           </p>
           <SliderInput
-            defaultValue={4}
             value={interestRatePct}
-            onChange={onChange}
+            onChange={this.changeInterestRate}
           />
         </div>
         <div className="financial-display">
@@ -79,6 +125,12 @@ App.propTypes = {
   monthlyDeposit: PropTypes.number,
   interestRatePct: PropTypes.number,
   data: PropTypes.arrayOf(PropTypes.number),
+
+  changePrincipal: PropTypes.func,
+  changeDeposit: PropTypes.func,
+  changeInterestRate: PropTypes.func,
+  changeInterestFreq: PropTypes.func,
+  changeCurrency: PropTypes.func,
   onChange: PropTypes.func
 };
 

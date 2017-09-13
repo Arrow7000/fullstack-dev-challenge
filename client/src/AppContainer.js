@@ -1,6 +1,13 @@
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchCalculation } from "./store";
+import {
+  fetchCalculation,
+  changePrincipal,
+  changeDeposit,
+  changeInterestRate,
+  changeInterestFreq,
+  changeCurrency
+} from "./store";
 import App from "./App.jsx";
 
 function mapStateToProps(state) {
@@ -8,7 +15,17 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchCalculation }, dispatch);
+  return bindActionCreators(
+    {
+      fetchCalculation,
+      changePrincipal,
+      changeDeposit,
+      changeInterestRate,
+      changeInterestFreq,
+      changeCurrency
+    },
+    dispatch
+  );
 }
 
 function mergeProps(stateProps, dispatchProps) {
@@ -17,11 +34,20 @@ function mergeProps(stateProps, dispatchProps) {
     monthlyDeposit,
     interestRatePct,
     interestAnnFreq,
-    currency
+    currency,
+    data
   } = stateProps;
-  const { fetchCalculation } = dispatchProps;
+
+  const {
+    fetchCalculation,
+    changePrincipal,
+    changeDeposit,
+    changeInterestRate,
+    changeInterestFreq,
+    changeCurrency
+  } = dispatchProps;
+
   const onChange = () => {
-    console.log("fetching");
     fetchCalculation(
       principal,
       monthlyDeposit,
@@ -30,7 +56,21 @@ function mergeProps(stateProps, dispatchProps) {
       currency
     );
   };
-  return { onChange };
+  return {
+    principal,
+    monthlyDeposit,
+    interestRatePct,
+    interestAnnFreq,
+    currency,
+    data,
+    // functions
+    onChange,
+    changePrincipal,
+    changeDeposit,
+    changeInterestRate,
+    changeInterestFreq,
+    changeCurrency
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(App);

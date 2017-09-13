@@ -5,9 +5,6 @@ import { VictoryLine, VictoryChart } from "victory";
 export default class DisplayGraph extends Component {
   render() {
     const { data } = this.props;
-    // console.log(data);
-    // const transformedData = data.map((datum, i) => ({ x: i, y: datum }));
-    // console.log(transformedData);
 
     const baseProps = {
       width: 450,
@@ -67,9 +64,7 @@ export default class DisplayGraph extends Component {
     return (
       <div>
         <VictoryChart animate={{ duration: 100 }} theme={theme}>
-          {/* <VictoryLine {...{ data }} y="amount" /> */}
           <VictoryLine {...{ data }} />
-          {/* <VictoryLine data={transformedData} y="y" /> */}
         </VictoryChart>
       </div>
     );

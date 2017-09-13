@@ -19,18 +19,64 @@ const initialState = {
 // Action type enums
 const REQUEST_CALC = "REQUEST_CALC";
 const GET_CALC = "GET_CALC";
+const CHANGE_PRINCIPAL = "CHANGE_PRINCIPAL";
+const CHANGE_DEPOSIT = "CHANGE_DEPOSIT";
+const CHANGE_INTEREST_RATE = "CHANGE_INTEREST_RATE";
+const CHANGE_INTEREST_FREQ = "CHANGE_INTEREST_FREQ";
+const CHANGE_CURRENCY = "CHANGE_CURRENCY";
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case REQUEST_CALC:
       return { ...state, fetching: true };
 
-    case GET_CALC:
+    case GET_CALC: {
       return {
         ...state,
         fetching: false,
-        data: action.payload
+        data: action.data
       };
+    }
+
+    case CHANGE_PRINCIPAL: {
+      const { principal } = action;
+      return {
+        ...state,
+        principal
+      };
+    }
+
+    case CHANGE_DEPOSIT: {
+      const { monthlyDeposit } = action;
+      return {
+        ...state,
+        monthlyDeposit
+      };
+    }
+
+    case CHANGE_INTEREST_RATE: {
+      const { interestRatePct } = action;
+      return {
+        ...state,
+        interestRatePct
+      };
+    }
+
+    case CHANGE_INTEREST_FREQ: {
+      const { interestAnnFreq } = action;
+      return {
+        ...state,
+        interestAnnFreq
+      };
+    }
+
+    case CHANGE_CURRENCY: {
+      const { currency } = action;
+      return {
+        ...state,
+        currency
+      };
+    }
 
     default:
       return state;
@@ -53,7 +99,7 @@ function requestCalculation() {
 function getCalculation(calcResult) {
   return {
     type: GET_CALC,
-    payload: calcResult
+    data: calcResult
   };
 }
 
@@ -88,4 +134,24 @@ export function fetchCalculation(
         console.error(error);
       });
   };
+}
+
+export function changePrincipal(principal) {
+  return { type: CHANGE_PRINCIPAL, principal };
+}
+
+export function changeDeposit(monthlyDeposit) {
+  return { type: CHANGE_DEPOSIT, monthlyDeposit };
+}
+
+export function changeInterestRate(interestRatePct) {
+  return { type: CHANGE_INTEREST_RATE, interestRatePct };
+}
+
+export function changeInterestFreq(interestAnnFreq) {
+  return { type: CHANGE_INTEREST_FREQ, interestAnnFreq };
+}
+
+export function changeCurrency(currency) {
+  return { type: CHANGE_CURRENCY, currency };
 }
